@@ -145,48 +145,30 @@ function drawNet() {
 }
 drawNet();
 
-/* ---- Roaming pool robot: drives in the direction its tracks point ---- */
+/* ---- Roaming pool robot: side-profile, drives like a car ---- */
 var robot = document.getElementById('robot');
 var stage = document.querySelector('.content');
 var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var FORWARD = 211;        // tire/track heading, flipped 180 deg so it drives the other way
+var NATIVE_RIGHT = 1;     // sprite faces right by default; set -1 if it drives backwards
 var sw = 118, sh = 93;
-var rx = 60, ry = 60;     // position (top-left of sprite)
-var hd = 211;             // target heading (deg)
-var disp = 211;           // displayed heading — motion + rotation both use this
-var wander = 0;
-var speed = 0.5;
+var rx = 0, ry = 0, targetY = 0;
+var dir = 1;              // 1 = driving right, -1 = driving left
+var speed = 0.55;
 
-function lerpAngle(a, b, t){
-  var d = ((b - a + 540) % 360) - 180;
-  return a + d * t;
-}
 function place(){
-  robot.style.transform = 'translate(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px) rotate(' + (disp - FORWARD).toFixed(2) + 'deg)';
+  robot.style.transform = 'translate(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px) scaleX(' + (dir * NATIVE_RIGHT) + ')';
+}
+function newLane(){
+  var h = stage.clientHeight;
+  targetY = 6 + Math.random() * Math.max(10, h - sh - 12);
 }
 function step(){
-  var w = stage.clientWidth, h = stage.clientHeight;
-  var cx = rx + sw/2, cy = ry + sh/2;
-  var m = 60;
-  var nearEdge = (cx < m) || (cx > w - m) || (cy < m) || (cy > h - m);
-
-  if (nearEdge) {
-    var toCenter = Math.atan2((h/2 - cy), (w/2 - cx)) * 180/Math.PI;
-    hd = lerpAngle(hd, toCenter, 0.05);     // curve back toward the middle
-    wander *= 0.6;
-  } else {
-    wander += (Math.random() - 0.5) * 0.35;  // gentle meander
-    wander = Math.max(-1.1, Math.min(1.1, wander * 0.94));
-    hd += wander;
-  }
-
-  disp = lerpAngle(disp, hd, 0.045);         // smooth turning of the whole robot
-  rx += Math.cos(disp * Math.PI/180) * speed;
-  ry += Math.sin(disp * Math.PI/180) * speed;
-
-  rx = Math.max(-8, Math.min(w - sw + 8, rx));
-  ry = Math.max(4, Math.min(h - sh - 4, ry));
-
+  var w = stage.clientWidth;
+  rx += dir * speed;
+  ry += (targetY - ry) * 0.02;             // glide to a new lane, always upright
+  if (Math.random() < 0.004) newLane();
+  if (rx < -6) { rx = -6; dir = 1; newLane(); }
+  if (rx > w - sw + 6) { rx = w - sw + 6; dir = -1; newLane(); }
   place();
   requestAnimationFrame(step);
 }
@@ -194,7 +176,8 @@ function startRobot(){
   sw = robot.clientWidth || 118;
   sh = robot.clientHeight || 93;
   var w = stage.clientWidth, h = stage.clientHeight;
-  rx = w * 0.25; ry = Math.max(20, h * 0.4);
+  rx = w * 0.3; ry = targetY = Math.max(10, h * 0.4);
+  dir = 1;
   place();
   if (!reduce) requestAnimationFrame(step);
 }
