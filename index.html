@@ -6,7 +6,6 @@
 <title>Hayward Australia - Home</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { height: 100%; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   background: #f5f5f7; color: #1d1d1f; overflow-x: hidden; -webkit-font-smoothing: antialiased;
@@ -21,14 +20,14 @@ body {
   position: relative; z-index: 2; color: #ffffff; font-size: 26px; font-weight: 700;
   letter-spacing: 0.02em; padding-left: 34px; text-transform: uppercase;
 }
-.content { position: relative; min-height: calc(100vh - 92px); overflow: hidden; }
+.content { position: relative; overflow: hidden; }
 .roam { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 #robot {
   position: absolute; top: 0; left: 0; width: 118px; height: auto;
-  filter: drop-shadow(0 10px 12px rgba(20,40,80,0.28));
-  will-change: transform; opacity: 0.96;
+  filter: drop-shadow(0 9px 11px rgba(20,40,80,0.26));
+  will-change: transform; opacity: 0.96; transform-origin: 50% 50%;
 }
-.container { position: relative; z-index: 2; max-width: 1120px; margin: 0 auto; padding: 26px 24px 20px; }
+.container { position: relative; z-index: 2; max-width: 1120px; margin: 0 auto; padding: 24px 24px 24px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 11px; }
 .tile {
   position: relative; border-radius: 12px; padding: 13px 8px; min-height: 46px;
@@ -59,13 +58,12 @@ body {
   55% { transform: translateY(-4px) scale(1.02); }
   100% { transform: translateY(0) scale(1); }
 }
-footer { text-align: center; padding: 30px 0 12px; color: #a1a1a6; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
 @media (prefers-reduced-motion: reduce) { .tile { animation: none; } }
 @media (max-width: 734px) {
   .banner { height: 70px; }
   .banner h1 { font-size: 18px; padding-left: 20px; }
   .grid { grid-template-columns: repeat(3, 1fr); }
-  #robot { width: 90px; }
+  #robot { width: 92px; }
 }
 </style>
 </head>
@@ -109,7 +107,6 @@ footer { text-align: center; padding: 30px 0 12px; color: #a1a1a6; font-size: 10
       <a target="_blank" rel="noopener" href="https://haywardpools.sharepoint.com/SitePages/Global-Townhall-Recordings.aspx" class="tile"><span>Townhalls</span></a>
       <a target="_blank" rel="noopener" href="https://www.afl.com.au/" class="tile"><span>AFL</span></a>
     </div>
-    <footer>Hayward Australia Intranet</footer>
   </div>
 </div>
 
@@ -136,8 +133,8 @@ function drawNet() {
     if(a.x<0||a.x>W)a.vx*=-1; if(a.y<0||a.y>H)a.vy*=-1;
     for(var j=i+1;j<nodes.length;j++){
       var b=nodes[j]; var dx=a.x-b.x, dy=a.y-b.y; var d=Math.sqrt(dx*dx+dy*dy);
-      if(d<120){ var alpha=(1-d/120)*0.45*Math.min(1,(a.x/W)+0.15);
-        ctx.strokeStyle='rgba(160,195,235,'+alpha+')'; ctx.lineWidth=0.7;
+      if(d<120){ var al=(1-d/120)*0.45*Math.min(1,(a.x/W)+0.15);
+        ctx.strokeStyle='rgba(160,195,235,'+al+')'; ctx.lineWidth=0.7;
         ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
     }
   }
@@ -148,43 +145,61 @@ function drawNet() {
 }
 drawNet();
 
-/* ---- Roaming pool robot (behind the buttons) ---- */
+/* ---- Roaming pool robot: drives in the direction its tracks point ---- */
 var robot = document.getElementById('robot');
 var stage = document.querySelector('.content');
 var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var rx, ry, vx, vy, facing = 1, spriteW = 118, spriteH = 93;
-function bounds(){ return { w: stage.clientWidth, h: stage.clientHeight }; }
-function initRobot(){
-  var b = bounds();
-  rx = Math.random()*(b.w - spriteW);
-  ry = 120 + Math.random()*(Math.max(80, b.h - spriteH - 160));
-  var ang = Math.random()*Math.PI*2, sp = 0.55;
-  vx = Math.cos(ang)*sp; vy = Math.sin(ang)*sp;
+var FORWARD = 31;         // sprite's native tire/track heading (deg, measured)
+var sw = 118, sh = 93;
+var rx = 60, ry = 60;     // position (top-left of sprite)
+var hd = 31;              // target heading (deg)
+var disp = 31;            // displayed heading — motion + rotation both use this
+var wander = 0;
+var speed = 0.5;
+
+function lerpAngle(a, b, t){
+  var d = ((b - a + 540) % 360) - 180;
+  return a + d * t;
 }
-function stepRobot(){
-  var b = bounds();
-  if (Math.random() < 0.012) {              // occasional gentle turn
-    var t = (Math.random()-0.5)*0.7;
-    var c = Math.cos(t), s = Math.sin(t);
-    var nx = vx*c - vy*s, ny = vx*s + vy*c;
-    vx = nx; vy = ny;
+function place(){
+  robot.style.transform = 'translate(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px) rotate(' + (disp - FORWARD).toFixed(2) + 'deg)';
+}
+function step(){
+  var w = stage.clientWidth, h = stage.clientHeight;
+  var cx = rx + sw/2, cy = ry + sh/2;
+  var m = 60;
+  var nearEdge = (cx < m) || (cx > w - m) || (cy < m) || (cy > h - m);
+
+  if (nearEdge) {
+    var toCenter = Math.atan2((h/2 - cy), (w/2 - cx)) * 180/Math.PI;
+    hd = lerpAngle(hd, toCenter, 0.05);     // curve back toward the middle
+    wander *= 0.6;
+  } else {
+    wander += (Math.random() - 0.5) * 0.35;  // gentle meander
+    wander = Math.max(-1.1, Math.min(1.1, wander * 0.94));
+    hd += wander;
   }
-  rx += vx; ry += vy;
-  if (rx < 0) { rx = 0; vx = Math.abs(vx); }
-  if (rx > b.w - spriteW) { rx = b.w - spriteW; vx = -Math.abs(vx); }
-  if (ry < 90) { ry = 90; vy = Math.abs(vy); }
-  if (ry > b.h - spriteH - 30) { ry = b.h - spriteH - 30; vy = -Math.abs(vy); }
-  facing = vx < 0 ? -1 : 1;
-  robot.style.transform = 'translate(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px) scaleX(' + facing + ')';
-  requestAnimationFrame(stepRobot);
+
+  disp = lerpAngle(disp, hd, 0.045);         // smooth turning of the whole robot
+  rx += Math.cos(disp * Math.PI/180) * speed;
+  ry += Math.sin(disp * Math.PI/180) * speed;
+
+  rx = Math.max(-8, Math.min(w - sw + 8, rx));
+  ry = Math.max(4, Math.min(h - sh - 4, ry));
+
+  place();
+  requestAnimationFrame(step);
 }
-robot.addEventListener('load', function(){
-  spriteW = robot.clientWidth; spriteH = robot.clientHeight;
-  initRobot();
-  if (!reduce) stepRobot();
-  else robot.style.transform = 'translate(' + rx + 'px,' + ry + 'px)';
-});
-if (robot.complete) robot.dispatchEvent(new Event('load'));
+function startRobot(){
+  sw = robot.clientWidth || 118;
+  sh = robot.clientHeight || 93;
+  var w = stage.clientWidth, h = stage.clientHeight;
+  rx = w * 0.25; ry = Math.max(20, h * 0.4);
+  place();
+  if (!reduce) requestAnimationFrame(step);
+}
+if (robot.complete) startRobot();
+else robot.addEventListener('load', startRobot);
 
 /* ---- Fishing click: bobber dip ---- */
 document.getElementById('grid').addEventListener('click', function(e){
