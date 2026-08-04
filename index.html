@@ -21,7 +21,14 @@ body {
   position: relative; z-index: 2; color: #ffffff; font-size: 26px; font-weight: 700;
   letter-spacing: 0.02em; padding-left: 34px; text-transform: uppercase;
 }
-.container { max-width: 1120px; margin: 0 auto; padding: 26px 24px 20px; }
+.content { position: relative; min-height: calc(100vh - 92px); overflow: hidden; }
+.roam { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+#robot {
+  position: absolute; top: 0; left: 0; width: 118px; height: auto;
+  filter: drop-shadow(0 10px 12px rgba(20,40,80,0.28));
+  will-change: transform; opacity: 0.96;
+}
+.container { position: relative; z-index: 2; max-width: 1120px; margin: 0 auto; padding: 26px 24px 20px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 11px; }
 .tile {
   position: relative; border-radius: 12px; padding: 13px 8px; min-height: 46px;
@@ -58,6 +65,7 @@ footer { text-align: center; padding: 30px 0 12px; color: #a1a1a6; font-size: 10
   .banner { height: 70px; }
   .banner h1 { font-size: 18px; padding-left: 20px; }
   .grid { grid-template-columns: repeat(3, 1fr); }
+  #robot { width: 90px; }
 }
 </style>
 </head>
@@ -68,40 +76,45 @@ footer { text-align: center; padding: 30px 0 12px; color: #a1a1a6; font-size: 10
   <h1>Hayward Australia - Home</h1>
 </div>
 
-<div class="container">
-  <div class="grid" id="grid">
-    <a target="_blank" rel="noopener" href="https://haywardpools.sharepoint.com/" class="tile"><span>The Splash - Global</span></a>
-    <a target="_blank" rel="noopener" href="https://portal-hayward.com/" class="tile"><span>Customer Portal</span></a>
-    <a target="_blank" rel="noopener" href="https://hayward.okta.com/" class="tile"><span>Okta</span></a>
-    <a target="_blank" rel="noopener" href="https://hayward-pool.phocassoftware.com/" class="tile"><span>Phocas</span></a>
-    <a target="_blank" rel="noopener" href="https://hayward9702.freshdesk.com/" class="tile"><span>Freshdesk</span></a>
-    <a target="_blank" rel="noopener" href="https://haywardpools.sharepoint.com/:f:/r/sites/AUS-HPA/Shared%20Documents/Australia%20-%20SHARED%20FOLDERS?csf=1&web=1&e=MFP47b" class="tile"><span>Shared Folders</span></a>
-    <a target="_blank" rel="noopener" href="https://app.slack.com/client/T07MP4RG2UW/C095X6J991U" class="tile"><span>Slack</span></a>
-    <a target="_blank" rel="noopener" href="https://www.myworkday.com/hayward/d/home.htmld" class="tile"><span>Workday</span></a>
-    <a target="_blank" rel="noopener" href="https://app.powerbi.com/groups/7fc9c834-2577-4ba7-870b-438aa3d549b7/reports/58da40d6-774a-432a-b197-fbce62c242f0/24c72477c6877ebeb525?ctid=5bde7850-ba32-46e5-b4e5-1a38ac5102ba&experience=power-bi" class="tile"><span>Power BI</span></a>
-    <a target="_blank" rel="noopener" href="https://haywardpools.sharepoint.com/:f:/r/sites/AUS-HPA/Shared%20Documents/Australia%20-%20SHARED%20FOLDERS/SALES/Price%20Files/2026%20Price%20list%20April?csf=1&web=1&e=6HaCtz" class="tile"><span>Price List</span></a>
-    <a target="_blank" rel="noopener" href="https://lively-rock-0e1f4e510.7.azurestaticapps.net/margin_tool" class="tile"><span>Margin Tool</span></a>
-    <a target="_blank" rel="noopener" href="https://lively-rock-0e1f4e510.7.azurestaticapps.net" class="tile"><span>Pricing Tool</span></a>
-    <a target="_blank" rel="noopener" href="https://haywardpools.sharepoint.com/:f:/r/sites/AUS-HPA/Shared%20Documents/Australia%20-%20SHARED%20FOLDERS/TECHNICAL/Training%20Info?csf=1&web=1&e=Trs35e" class="tile"><span>Tech Manuals</span></a>
-    <a target="_blank" rel="noopener" href="https://haywardpools-my.sharepoint.com/:x:/r/personal/remmett_hayward_com/_layouts/15/Doc.aspx?sourcedoc=%7bCD6D2351-3739-49D1-876F-96A7E40F3F9F%7d&file=Shipment%20Schedule.xlsx&fromShare=true&action=default&mobileredirect=true" class="tile"><span>Shipment Sched.</span></a>
-    <a target="_blank" rel="noopener" href="https://planner.cloud.microsoft/" class="tile"><span>Planner</span></a>
-    <a target="_blank" rel="noopener" href="https://wallboard.ccuniverge.blue/c9397734-82fc-43de-8c96-422e8446cb58?lang=en-AU" class="tile"><span>Active Calls</span></a>
-    <a target="_blank" rel="noopener" href="https://dealer-locator-chi.vercel.app/" class="tile"><span>Dealer Locator</span></a>
-    <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/training/paths/get-started-finance-operations/" class="tile"><span>D365 Training</span></a>
-    <a target="_blank" rel="noopener" href="https://kpi-dashboard-sigma-six.vercel.app/kpi-dashboard.html" class="tile"><span>KPI Dashboard</span></a>
-    <a target="_blank" rel="noopener" href="https://forms.office.com/Pages/DesignPageV2.aspx?origin=NeoPortalPage&subpage=design&id=UHjeWzK65Ua05Ro4rFECuiUkgNBmVF1Bl8Tc-llB2CRUN0swQ0hNSjFLQU00QTY1M0dRNVAySzVBUC4u" class="tile"><span>Warranty Form</span></a>
-    <a target="_blank" rel="noopener" href="https://www.splash.online/" class="tile"><span>Splash</span></a>
-    <a target="_blank" rel="noopener" href="https://online.cario.com.au/" class="tile"><span>Cario</span></a>
-    <a target="_blank" rel="noopener" href="https://go.myfreight.com.au/" class="tile"><span>My Freight</span></a>
-    <a target="_blank" rel="noopener" href="https://www.spasa.com.au/news" class="tile"><span>SPASA</span></a>
-    <a target="_blank" rel="noopener" href="https://forms.office.com/r/7NAn2eAygJ" class="tile"><span>Incident Report</span></a>
-    <a target="_blank" rel="noopener" href="https://haywardpools.sharepoint.com/SitePages/Global-Townhall-Recordings.aspx" class="tile"><span>Townhalls</span></a>
-    <a target="_blank" rel="noopener" href="https://www.afl.com.au/" class="tile"><span>AFL</span></a>
+<div class="content">
+  <div class="roam"><img id="robot" src="robot.png" alt=""></div>
+
+  <div class="container">
+    <div class="grid" id="grid">
+      <a target="_blank" rel="noopener" href="https://haywardpools.sharepoint.com/" class="tile"><span>The Splash - Global</span></a>
+      <a target="_blank" rel="noopener" href="https://portal-hayward.com/" class="tile"><span>Customer Portal</span></a>
+      <a target="_blank" rel="noopener" href="https://hayward.okta.com/" class="tile"><span>Okta</span></a>
+      <a target="_blank" rel="noopener" href="https://hayward-pool.phocassoftware.com/" class="tile"><span>Phocas</span></a>
+      <a target="_blank" rel="noopener" href="https://hayward9702.freshdesk.com/" class="tile"><span>Freshdesk</span></a>
+      <a target="_blank" rel="noopener" href="https://haywardpools.sharepoint.com/:f:/r/sites/AUS-HPA/Shared%20Documents/Australia%20-%20SHARED%20FOLDERS?csf=1&web=1&e=MFP47b" class="tile"><span>Shared Folders</span></a>
+      <a target="_blank" rel="noopener" href="https://app.slack.com/client/T07MP4RG2UW/C095X6J991U" class="tile"><span>Slack</span></a>
+      <a target="_blank" rel="noopener" href="https://www.myworkday.com/hayward/d/home.htmld" class="tile"><span>Workday</span></a>
+      <a target="_blank" rel="noopener" href="https://app.powerbi.com/groups/7fc9c834-2577-4ba7-870b-438aa3d549b7/reports/58da40d6-774a-432a-b197-fbce62c242f0/24c72477c6877ebeb525?ctid=5bde7850-ba32-46e5-b4e5-1a38ac5102ba&experience=power-bi" class="tile"><span>Power BI</span></a>
+      <a target="_blank" rel="noopener" href="https://haywardpools.sharepoint.com/:f:/r/sites/AUS-HPA/Shared%20Documents/Australia%20-%20SHARED%20FOLDERS/SALES/Price%20Files/2026%20Price%20list%20April?csf=1&web=1&e=6HaCtz" class="tile"><span>Price List</span></a>
+      <a target="_blank" rel="noopener" href="https://lively-rock-0e1f4e510.7.azurestaticapps.net/margin_tool" class="tile"><span>Margin Tool</span></a>
+      <a target="_blank" rel="noopener" href="https://lively-rock-0e1f4e510.7.azurestaticapps.net" class="tile"><span>Pricing Tool</span></a>
+      <a target="_blank" rel="noopener" href="https://haywardpools.sharepoint.com/:f:/r/sites/AUS-HPA/Shared%20Documents/Australia%20-%20SHARED%20FOLDERS/TECHNICAL/Training%20Info?csf=1&web=1&e=Trs35e" class="tile"><span>Tech Manuals</span></a>
+      <a target="_blank" rel="noopener" href="https://haywardpools-my.sharepoint.com/:x:/r/personal/remmett_hayward_com/_layouts/15/Doc.aspx?sourcedoc=%7bCD6D2351-3739-49D1-876F-96A7E40F3F9F%7d&file=Shipment%20Schedule.xlsx&fromShare=true&action=default&mobileredirect=true" class="tile"><span>Shipment Sched.</span></a>
+      <a target="_blank" rel="noopener" href="https://planner.cloud.microsoft/" class="tile"><span>Planner</span></a>
+      <a target="_blank" rel="noopener" href="https://wallboard.ccuniverge.blue/c9397734-82fc-43de-8c96-422e8446cb58?lang=en-AU" class="tile"><span>Active Calls</span></a>
+      <a target="_blank" rel="noopener" href="https://dealer-locator-chi.vercel.app/" class="tile"><span>Dealer Locator</span></a>
+      <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/training/paths/get-started-finance-operations/" class="tile"><span>D365 Training</span></a>
+      <a target="_blank" rel="noopener" href="https://kpi-dashboard-sigma-six.vercel.app/kpi-dashboard.html" class="tile"><span>KPI Dashboard</span></a>
+      <a target="_blank" rel="noopener" href="https://forms.office.com/Pages/DesignPageV2.aspx?origin=NeoPortalPage&subpage=design&id=UHjeWzK65Ua05Ro4rFECuiUkgNBmVF1Bl8Tc-llB2CRUN0swQ0hNSjFLQU00QTY1M0dRNVAySzVBUC4u" class="tile"><span>Warranty Form</span></a>
+      <a target="_blank" rel="noopener" href="https://www.splash.online/" class="tile"><span>Splash</span></a>
+      <a target="_blank" rel="noopener" href="https://online.cario.com.au/" class="tile"><span>Cario</span></a>
+      <a target="_blank" rel="noopener" href="https://go.myfreight.com.au/" class="tile"><span>My Freight</span></a>
+      <a target="_blank" rel="noopener" href="https://www.spasa.com.au/news" class="tile"><span>SPASA</span></a>
+      <a target="_blank" rel="noopener" href="https://forms.office.com/r/7NAn2eAygJ" class="tile"><span>Incident Report</span></a>
+      <a target="_blank" rel="noopener" href="https://haywardpools.sharepoint.com/SitePages/Global-Townhall-Recordings.aspx" class="tile"><span>Townhalls</span></a>
+      <a target="_blank" rel="noopener" href="https://www.afl.com.au/" class="tile"><span>AFL</span></a>
+    </div>
+    <footer>Hayward Australia Intranet</footer>
   </div>
-  <footer>Hayward Australia Intranet</footer>
 </div>
 
 <script>
+/* ---- Banner constellation ---- */
 var canvas = document.getElementById('net');
 var ctx = canvas.getContext('2d');
 var W, H, nodes = [];
@@ -135,13 +148,52 @@ function drawNet() {
 }
 drawNet();
 
+/* ---- Roaming pool robot (behind the buttons) ---- */
+var robot = document.getElementById('robot');
+var stage = document.querySelector('.content');
+var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var rx, ry, vx, vy, facing = 1, spriteW = 118, spriteH = 93;
+function bounds(){ return { w: stage.clientWidth, h: stage.clientHeight }; }
+function initRobot(){
+  var b = bounds();
+  rx = Math.random()*(b.w - spriteW);
+  ry = 120 + Math.random()*(Math.max(80, b.h - spriteH - 160));
+  var ang = Math.random()*Math.PI*2, sp = 0.55;
+  vx = Math.cos(ang)*sp; vy = Math.sin(ang)*sp;
+}
+function stepRobot(){
+  var b = bounds();
+  if (Math.random() < 0.012) {              // occasional gentle turn
+    var t = (Math.random()-0.5)*0.7;
+    var c = Math.cos(t), s = Math.sin(t);
+    var nx = vx*c - vy*s, ny = vx*s + vy*c;
+    vx = nx; vy = ny;
+  }
+  rx += vx; ry += vy;
+  if (rx < 0) { rx = 0; vx = Math.abs(vx); }
+  if (rx > b.w - spriteW) { rx = b.w - spriteW; vx = -Math.abs(vx); }
+  if (ry < 90) { ry = 90; vy = Math.abs(vy); }
+  if (ry > b.h - spriteH - 30) { ry = b.h - spriteH - 30; vy = -Math.abs(vy); }
+  facing = vx < 0 ? -1 : 1;
+  robot.style.transform = 'translate(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px) scaleX(' + facing + ')';
+  requestAnimationFrame(stepRobot);
+}
+robot.addEventListener('load', function(){
+  spriteW = robot.clientWidth; spriteH = robot.clientHeight;
+  initRobot();
+  if (!reduce) stepRobot();
+  else robot.style.transform = 'translate(' + rx + 'px,' + ry + 'px)';
+});
+if (robot.complete) robot.dispatchEvent(new Event('load'));
+
+/* ---- Fishing click: bobber dip ---- */
 document.getElementById('grid').addEventListener('click', function(e){
   var tile = e.target.closest('.tile');
   if(!tile) return;
   tile.classList.remove('caught'); void tile.offsetWidth; tile.classList.add('caught');
 });
 
-window.addEventListener('resize', sizeNet);
+window.addEventListener('resize', function(){ sizeNet(); });
 </script>
 
 </body>
