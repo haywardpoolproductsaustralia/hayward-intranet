@@ -149,11 +149,11 @@ drawNet();
 var robot = document.getElementById('robot');
 var stage = document.querySelector('.content');
 var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-var FORWARD = 31;         // sprite's native tire/track heading (deg, measured)
+var FORWARD = 211;        // tire/track heading, flipped 180 deg so it drives the other way
 var sw = 118, sh = 93;
 var rx = 60, ry = 60;     // position (top-left of sprite)
-var hd = 31;              // target heading (deg)
-var disp = 31;            // displayed heading — motion + rotation both use this
+var hd = 211;             // target heading (deg)
+var disp = 211;           // displayed heading — motion + rotation both use this
 var wander = 0;
 var speed = 0.5;
 
